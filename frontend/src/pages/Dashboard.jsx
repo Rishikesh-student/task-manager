@@ -28,6 +28,7 @@ function Dashboard() {
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     fetchBoards()
@@ -82,6 +83,11 @@ function Dashboard() {
     }
   }
 
+  const filteredBoards = boards.filter(board =>
+    board.title.toLowerCase().includes(search.toLowerCase()) ||
+    board.description?.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Navbar */}
@@ -101,7 +107,7 @@ function Dashboard() {
 
       {/* Main */}
       <div className="max-w-6xl mx-auto px-6 py-10">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">My Boards</h2>
           <button
             onClick={() => setShowForm(!showForm)}
@@ -109,6 +115,17 @@ function Dashboard() {
           >
             + New Board
           </button>
+        </div>
+
+        {/* Search Bar */}
+        <div className="mb-8">
+          <input
+            type="text"
+            placeholder="🔍 Search boards..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white outline-none focus:border-blue-500 transition"
+          />
         </div>
 
         {/* Create Board Form */}
@@ -136,14 +153,14 @@ function Dashboard() {
         )}
 
         {/* Boards Grid */}
-        {boards.length === 0 ? (
+        {filteredBoards.length === 0 ? (
           <div className="text-center text-gray-500 mt-20">
             <div className="text-5xl mb-4">📭</div>
-            <p>No boards yet. Create your first one!</p>
+            <p>{search ? 'No boards match your search.' : 'No boards yet. Create your first one!'}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {boards.map((board, index) => (
+            {filteredBoards.map((board, index) => (
               <div
                 key={board._id}
                 className="rounded-xl cursor-pointer hover:scale-105 transition-transform duration-200 relative group overflow-hidden shadow-lg"
@@ -160,18 +177,15 @@ function Dashboard() {
                       ✕
                     </button>
                   </div>
-                  <p className="text-white text-opacity-80 text-sm mt-1 opacity-80">{board.description || 'No description'}</p>
+                  <p className="text-white text-sm mt-1 opacity-80">{board.description || 'No description'}</p>
                 </div>
 
                 {/* Bottom Info */}
                 <div className="bg-gray-800 px-5 py-3 flex justify-between items-center">
-                  {/* Task Count */}
                   <div className="flex items-center gap-2 text-gray-400 text-sm">
                     <span>✓</span>
                     <span>{taskCounts[board._id] ?? 0} tasks</span>
                   </div>
-
-                  {/* Member Avatars */}
                   <div className="flex -space-x-2">
                     {board.members?.slice(0, 3).map((member, i) => (
                       <div
