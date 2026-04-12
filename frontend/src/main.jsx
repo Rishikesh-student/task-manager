@@ -15,6 +15,7 @@ createRoot(document.getElementById('root')).render(
       }}
       cacheLocation="localstorage"
       useRefreshTokens={true}
+      useRefreshTokensSilently={true}
     >
       <App />
     </Auth0Provider>
