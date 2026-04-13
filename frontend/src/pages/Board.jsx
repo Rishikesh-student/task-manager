@@ -239,7 +239,7 @@ function Board() {
             <div>
               <p className="text-sm text-gray-400 mb-2">Attachments</p>
               {selectedTask.attachments?.map((a, i) => (
-                <a key={i} href={a.url.replace('/upload/', '/upload/fl_attachment/')} target="_blank" rel="noreferrer" className="text-blue-400 text-sm block hover:underline">
+             <a key={i} href={a.url} target="_blank" rel="noreferrer" className="text-blue-400 text-sm block hover:underline">   
                   📎 {a.name}
                 </a>
               ))}
